@@ -17,8 +17,9 @@ namespace 监控数据
     {
         public FormSet()
         {
-            InitializeComponent();            
+            InitializeComponent();           
         }
+
 
         SqlCeHelper sqlcehelper = new SqlCeHelper();
 
@@ -270,6 +271,13 @@ namespace 监控数据
                 MessageBox.Show("请输入正确的邮箱地址及手机号","提示");
             }
             dataGridView1.DataSource = this.sqlcehelper.Query("SELECT mail,phone FROM mailtophone");
+        }
+
+        public string str_sql;
+        private void button6_Click(object sender, EventArgs e)
+        {
+            FormSQL form_sql = new FormSQL("测试");
+            form_sql.ShowDialog();
         }
     }
 }

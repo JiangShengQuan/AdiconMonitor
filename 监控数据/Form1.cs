@@ -25,13 +25,5 @@ namespace 监控数据
         {
             //sqlce.ExecNonQuery("insert into mailtophone(mail,phone) values (11,11)");
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            cc = new SqlCeConnection("Data Source=set.sdf");
-            cc.Open();
-            SqlCeDataAdapter ada = new SqlCeDataAdapter("select * from mailtophone", cc);
-            ada.Fill(dt);
-        }
     }
 }

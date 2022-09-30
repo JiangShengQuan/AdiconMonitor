@@ -86,6 +86,7 @@
             this.textBox20 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
@@ -130,7 +131,7 @@
             this.tbx_hpvtct_key = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
             this.tbx_hpvtct_webhook = new System.Windows.Forms.TextBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -770,6 +771,16 @@
             this.tabPage1.Text = "监控基础设置";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(16, 325);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(150, 16);
+            this.checkBox5.TabIndex = 31;
+            this.checkBox5.Text = "是否监控repno生成异常";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
@@ -1202,21 +1213,22 @@
             this.tbx_hpvtct_webhook.Size = new System.Drawing.Size(692, 21);
             this.tbx_hpvtct_webhook.TabIndex = 2;
             // 
-            // checkBox5
+            // button6
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(16, 325);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(150, 16);
-            this.checkBox5.TabIndex = 31;
-            this.checkBox5.Text = "是否监控repno生成异常";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.button6.Location = new System.Drawing.Point(15, 576);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(111, 23);
+            this.button6.TabIndex = 32;
+            this.button6.Text = "SQL语句配置";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // FormSet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(805, 607);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -1377,5 +1389,6 @@
         private System.Windows.Forms.TextBox tbx_hpvtct_key;
         private System.Windows.Forms.TextBox tbx_hpvtct_webhook;
         private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.Button button6;
     }
 }
