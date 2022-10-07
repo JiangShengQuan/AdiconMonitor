@@ -17,6 +17,7 @@ using WindowsFormsDemo;
 using Email.POP3;
 using System.Globalization;
 using 监控数据.Models;
+using 监控数据.Tools;
 
 namespace 监控数据
 {
@@ -52,7 +53,7 @@ namespace 监控数据
         string err, sendmail, sendpwd, ErrorMessage, subject;
 
         SqlCeHelper sqlcehelper = new SqlCeHelper();
-
+        SQLiteHelper sqlitehelper = new SQLiteHelper();
         private void button4_Click(object sender, EventArgs e)
         {
             int hour = DateTime.Now.Hour;
@@ -216,6 +217,12 @@ namespace 监控数据
             }
         }
 
+        private void sQL语句配置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSQL form_sql = new FormSQL();
+            form_sql.ShowDialog();
+        }
+
         //核酸上传异常推送
         private void btn_err_Click(object sender, EventArgs e)
         {
@@ -346,45 +353,46 @@ namespace 监控数据
             string sql_hpvtct;
             Log.LogMeg("---HPV、TCT阳性提醒---time", starttime + " | " + endtime, ".\\log\\");
 
-            sql_hpvtct = @"
-            --TCT阳性
-            SELECT b.mc,c.beizhu AS phone,c.mc AS ywy,a.ybid,a.brxm,case when a.brsex = '1' then'男' when a.brsex = '2' THEN '女'   END as  sex
-            ,a.brnl as age,a.SjDoctor,a.bgtime , a.bqh AS xmstring, CAST(a.xbblxzd AS VARCHAR(255)) as xm 
-            from [blsjk].[dbo].[t_tctbgd] a WITH(NOLOCK) 
-            LEFT JOIN lisdb.dbo.xt_yymc_print b WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =b.dh
-            LEFT JOIN lisdb.dbo.xt_brlb c WITH(NOLOCK)  ON c.dh=b.ywy 
-            WHERE flag_Result='-1'and Bgtime > DATEADD(MINUTE,-10,GETDATE())    
-            and xbblxzd not like '未见上皮%'
-            AND a.issh = '1' and  left(a.ybid,2) in ('31','33','37','39','8A','92','93','3Z') 
-            and  left(a.ybid,6) in ('315110')
-            UNION ALL
-            --HPV阳性
-             SELECT DISTINCT mc,t.phone,t.ywy,t.ybid,t.brxm,
-             case when t.brxb = '1' then'男' when t.brxb = '2' THEN '女' END 
-             ,t.brnl,t.sjys,t.bgrq,t.xmstring 
-             ,(
-	            SELECT t0.xmdh + ',' FROM (
-		            SELECT a.ybid,b.xmdh
-		            FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)
-		            LEFT JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK) ON a.yqdh = b.yqdh AND a.cdrq = b.cdrq AND a.ybbh = b.ybbh
-		            WHERE b.xmcdz = '阳性' AND b.xmdh LIKE '%HPV%'
-		            AND b.cdrq > DATEADD(MINUTE,-10,GETDATE())   
-		            AND a.ybzt IN ('s','p')	
-	            ) t0	
-	            WHERE t0.ybid = t.ybid FOR XML PATH('') 
-             ) AS xm
-             FROM  (
-	            SELECT c.mc,d.beizhu AS phone,d.mc AS ywy,a.ybid,a.brxm,a.brxb,a.brnl,a.sjys,a.bgrq ,a.xmstring,b.xmdh
-	            FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)
-	            LEFT JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK) ON a.yqdh = b.yqdh AND a.cdrq = b.cdrq AND a.ybbh = b.ybbh
-	            LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-	            LEFT JOIN lisdb.dbo.xt_brlb d WITH(NOLOCK)  ON d.dh=c.ywy 
-	            WHERE b.xmcdz = '阳性' AND b.xmdh LIKE '%HPV%'
-	            AND b.cdrq >  DATEADD(MINUTE,-10,GETDATE())  
-	            AND a.ybzt IN ('s','p') and  left(a.ybid,2) in ('31','33','37','39','8A','92','93','3Z')
-                and  left(a.ybid,6) in ('315110')
-            ) t  
-            ";
+            sql_hpvtct = this.sqlitehelper.Query(@"select query from SqlQuery where fname='HPV、TCT阳性提醒'").Rows[0][0].ToString();
+            //sql_hpvtct = @"
+            //--TCT阳性
+            //SELECT b.mc,c.beizhu AS phone,c.mc AS ywy,a.ybid,a.brxm,case when a.brsex = '1' then'男' when a.brsex = '2' THEN '女'   END as  sex
+            //,a.brnl as age,a.SjDoctor,a.bgtime , a.bqh AS xmstring, CAST(a.xbblxzd AS VARCHAR(255)) as xm 
+            //from [blsjk].[dbo].[t_tctbgd] a WITH(NOLOCK) 
+            //LEFT JOIN lisdb.dbo.xt_yymc_print b WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =b.dh
+            //LEFT JOIN lisdb.dbo.xt_brlb c WITH(NOLOCK)  ON c.dh=b.ywy 
+            //WHERE flag_Result='-1'and Bgtime > DATEADD(MINUTE,-10,GETDATE())    
+            //and xbblxzd not like '未见上皮%'
+            //AND a.issh = '1' and  left(a.ybid,2) in ('31','33','37','39','8A','92','93','3Z') 
+            //and  left(a.ybid,6) not in ('315110')
+            //UNION ALL
+            //--HPV阳性
+            // SELECT DISTINCT mc,t.phone,t.ywy,t.ybid,t.brxm,
+            // case when t.brxb = '1' then'男' when t.brxb = '2' THEN '女' END 
+            // ,t.brnl,t.sjys,t.bgrq,t.xmstring 
+            // ,(
+	           // SELECT t0.xmdh + ',' FROM (
+		          //  SELECT a.ybid,b.xmdh
+		          //  FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)
+		          //  LEFT JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK) ON a.yqdh = b.yqdh AND a.cdrq = b.cdrq AND a.ybbh = b.ybbh
+		          //  WHERE b.xmcdz = '阳性' AND b.xmdh LIKE '%HPV%'
+		          //  AND b.cdrq > DATEADD(MINUTE,-10,GETDATE())   
+		          //  AND a.ybzt IN ('s','p')	
+	           // ) t0	
+	           // WHERE t0.ybid = t.ybid FOR XML PATH('') 
+            // ) AS xm
+            // FROM  (
+	           // SELECT c.mc,d.beizhu AS phone,d.mc AS ywy,a.ybid,a.brxm,a.brxb,a.brnl,a.sjys,a.bgrq ,a.xmstring,b.xmdh
+	           // FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)
+	           // LEFT JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK) ON a.yqdh = b.yqdh AND a.cdrq = b.cdrq AND a.ybbh = b.ybbh
+	           // LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+	           // LEFT JOIN lisdb.dbo.xt_brlb d WITH(NOLOCK)  ON d.dh=c.ywy 
+	           // WHERE b.xmcdz = '阳性' AND b.xmdh LIKE '%HPV%'
+	           // AND b.cdrq >  DATEADD(MINUTE,-10,GETDATE())  
+	           // AND a.ybzt IN ('s','p') and  left(a.ybid,2) in ('31','33','37','39','8A','92','93','3Z')
+            //    and  left(a.ybid,6) not in ('315110')
+            //) t  
+            //";
 
             List<SqlParameter> hpvtctlist = new List<SqlParameter>();
             //hpvtctlist.Add(new SqlParameter("@time", decimal.Negate(num)));  //decimal.Negate(a)  取负数
@@ -757,8 +765,8 @@ AND b.CDRQ=CONVERT(CHAR(10),DATEADD(day,-1,GETDATE()),120)   AND ISNULL(BRXM,'')
         {            
             #region 邮件解析异常 
             datalist.Clear();
-            string sql = @"SELECT  [FID],[Subject],[Mail_from],[ErrorMessage],[FileName],[CreateTime],[EmailStatus],[SourceType],[FileContent] 
-FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,@time,GETDATE()) AND (LEN(CAST(ErrorMessage AS VARCHAR(5000))) > 0  OR ErrorMessage LIKE '%附件%') AND Subject NOT LIKE '%【阿里云邮】您的账号异地登录提醒%'  AND Subject NOT LIKE '%自动回复%' ";
+            string sql = this.sqlitehelper.Query(@"select query from SqlQuery where fname='邮件解析异常'").Rows[0][0].ToString();
+            //string sql = @"SELECT  [FID],[Subject],[Mail_from],[ErrorMessage],[FileName],[CreateTime],[EmailStatus],[SourceType],[FileContent] FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,@time,GETDATE()) AND (LEN(CAST(ErrorMessage AS VARCHAR(5000))) > 0  OR ErrorMessage LIKE '%附件%') AND Subject NOT LIKE '%【阿里云邮】您的账号异地登录提醒%'  AND Subject NOT LIKE '%自动回复%' ";
             if (notin.Length > 0)
             {
                 sql = sql + " AND Mail_from NOT IN (";
@@ -939,11 +947,12 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
             #endregion
 
             #region 混检表查询
-            string sqlhj = @"SELECT DISTINCT LEFT(Barcode,6) khdh,mc AS khmc,MIN(CreateDate) AS kssj,COUNT(Barcode) AS sl
- From lisdb.dbo.FileRecieveInfoDetail a WITH(NOLOCK) INNER JOIN lisdb.dbo.xt_yymc_print b WITH(NOLOCK)
- ON LEFT(a.Barcode,6) = b.dh
- where createdate > DATEADD(MINUTE,@time,GETDATE()) and inspectionproject not in ('新型冠状病毒核酸检测（10N1）','新型冠状病毒核酸检测（5N1）','新型冠状病毒核酸检测(10N1)','新型冠状病毒核酸检测(5N1)','新型冠状病毒核酸检测(20N1)','新型冠状病毒核酸检测（20N1）') 
- GROUP BY LEFT(Barcode,6),mc ";
+            string sqlhj = this.sqlitehelper.Query(@"select query from SqlQuery where fname='混检表查询'").Rows[0][0].ToString();
+ //           string sqlhj = @"SELECT DISTINCT LEFT(Barcode,6) khdh,mc AS khmc,MIN(CreateDate) AS kssj,COUNT(Barcode) AS sl
+ //From lisdb.dbo.FileRecieveInfoDetail a WITH(NOLOCK) INNER JOIN lisdb.dbo.xt_yymc_print b WITH(NOLOCK)
+ //ON LEFT(a.Barcode,6) = b.dh
+ //where createdate > DATEADD(MINUTE,@time,GETDATE()) and inspectionproject not in ('新型冠状病毒核酸检测（10N1）','新型冠状病毒核酸检测（5N1）','新型冠状病毒核酸检测(10N1)','新型冠状病毒核酸检测(5N1)','新型冠状病毒核酸检测(20N1)','新型冠状病毒核酸检测（20N1）') 
+ //GROUP BY LEFT(Barcode,6),mc ";
             List<SqlParameter> hjlist = new List<SqlParameter>();
             hjlist.Add(new SqlParameter("@time", decimal.Negate(time)));  //decimal.Negate(a)  取负数
             using (SqlDataReader reader = SqlHelper.GetReaderLISDB(sqlhj, hjlist.ToArray()))
@@ -995,13 +1004,14 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
             #region PDF报告单生成异常
             if (jkpdf == "1")
             {
-                string sqlpdf = @"
-                select ybid from blsjk.dbo.t_bljbxxb WITH(NOLOCK) where issh = '1' and autopdf = '' AND Bgtime >= GETDATE()-3 AND DATEADD(HOUR,4,bgtime)< GETDATE() AND LEFT(ybid,6) NOT IN ('179007','999999')
-                UNION
-                select ybid from blsjk.dbo.t_tctbgd WITH(NOLOCK) where issh = '1' and autopdf = '' AND Bgtime >= GETDATE()-3 AND DATEADD(HOUR,4,bgtime)< GETDATE() AND LEFT(ybid,6) NOT IN ('179007','999999')
-                UNION
-                select ybid from lisdb.dbo.t_bb_ts_lis_ybxx WITH(NOLOCK) where ybzt IN ('s','p') and flag_pdf='' AND bgrq >= GETDATE()-3 AND DATEADD(HOUR,4,bgrq)< GETDATE() AND LEFT(ybid,6) NOT IN ('179007','999999')
-                ";
+                string sqlpdf = this.sqlitehelper.Query(@"select query from SqlQuery where fname='PDF报告单生成异常'").Rows[0][0].ToString();
+                //string sqlpdf = @"
+                //select ybid from blsjk.dbo.t_bljbxxb WITH(NOLOCK) where issh = '1' and autopdf = '' AND Bgtime >= GETDATE()-3 AND DATEADD(HOUR,4,bgtime)< GETDATE() AND LEFT(ybid,6) NOT IN ('179007','999999')
+                //UNION
+                //select ybid from blsjk.dbo.t_tctbgd WITH(NOLOCK) where issh = '1' and autopdf = '' AND Bgtime >= GETDATE()-3 AND DATEADD(HOUR,4,bgtime)< GETDATE() AND LEFT(ybid,6) NOT IN ('179007','999999')
+                //UNION
+                //select ybid from lisdb.dbo.t_bb_ts_lis_ybxx WITH(NOLOCK) where ybzt IN ('s','p') and flag_pdf='' AND bgrq >= GETDATE()-3 AND DATEADD(HOUR,4,bgrq)< GETDATE() AND LEFT(ybid,6) NOT IN ('179007','999999')
+                //";
                 List<SqlParameter> pdflist = new List<SqlParameter>();
                 pdflist.Add(new SqlParameter("@time", decimal.Negate(time)));  //decimal.Negate(a)  区负数
                 DataTable dt = SqlHelper.GetList(sqlpdf);
@@ -1062,14 +1072,15 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
             #region 邮件解析程序异常，导致信息表里面没有数据（条码项目自动比对自动导入异常）       
             if (serverip == serveripLISDB)
             {
-                string sqldryc = @"SELECT CreateDate,Barcode FROM lis.dbo.FileRecieveInfo WITH(NOLOCK)
-                            WHERE CreateDate >= DATEADD(MINUTE,@time,GETDATE())  and ErrorStatus = '2' and 
-                            NOT EXISTS
-                             (
-	                            SELECT Barcode FROM LisSampleDB.dbo.SampleInfo WITH(NOLOCK)
-	                            WHERE CreateDate >= DATEADD(MINUTE,@time,GETDATE())  
-	                            AND LisSampleDB.dbo.SampleInfo.Barcode = lis.dbo.FileRecieveInfo.Barcode
-                            ) ";
+                string sqldryc = this.sqlitehelper.Query(@"select query from SqlQuery where fname='LIMS自动导入异常'").Rows[0][0].ToString();
+                //string sqldryc = @"SELECT CreateDate,Barcode FROM lis.dbo.FileRecieveInfo WITH(NOLOCK)
+                //            WHERE CreateDate >= DATEADD(MINUTE,@time,GETDATE())  and ErrorStatus = '2' and 
+                //            NOT EXISTS
+                //             (
+	               //             SELECT Barcode FROM LisSampleDB.dbo.SampleInfo WITH(NOLOCK)
+	               //             WHERE CreateDate >= DATEADD(MINUTE,@time,GETDATE())  
+	               //             AND LisSampleDB.dbo.SampleInfo.Barcode = lis.dbo.FileRecieveInfo.Barcode
+                //            ) ";
                 List<SqlParameter> dryclist = new List<SqlParameter>();
                 dryclist.Add(new SqlParameter("@time", decimal.Negate(time)));  //decimal.Negate(a)  取负数
                 using (SqlDataReader reader = SqlHelper.GetReader(sqldryc, dryclist.ToArray()))
@@ -1288,13 +1299,15 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
             #region repno 生成异常监控
             if (repno == "1")
             {
+                string sqlrepno = this.sqlitehelper.Query(@"select query from SqlQuery where fname='repno生成异常'").Rows[0][0].ToString();
                 List<SqlParameter> list_repno = new List<SqlParameter>();
                 //list_repno.Add(new SqlParameter("@starttime", starttime));
 
                 StringBuilder sbBarCode = new StringBuilder();
                 List<sample_Model> sample_repno = new List<sample_Model>(); //数据存放
 
-                using (SqlDataReader reader = SqlHelper.GetReaderByProcedure("lisdb.dbo.Procedure_repno", list_repno.ToArray()))
+                //using (SqlDataReader reader = SqlHelper.GetReaderByProcedure("lisdb.dbo.Procedure_repno", list_repno.ToArray()))
+                using (SqlDataReader reader = SqlHelper.GetReader(sqlrepno, list_repno.ToArray()))
                 {
                     if (reader.HasRows)
                     {
@@ -1389,58 +1402,59 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
         private void button2_Click(object sender, EventArgs e)
         {
             starttime = DateTime.Now.AddHours(-24).ToString();
-            string sqlxg = @"
-            SELECT  t.lx,t.dh,SUM(t.srsl) srsl,SUM(t.shsl) shsl,SUM(t.wxx) wxx,SUM(t.rl) rl FROM  (
-	            --刷入系统数 单检
-                SELECT DISTINCT  '单检' lx,LEFT(a.ybid,6) AS dh,
-                COUNT(*)AS srsl,0 AS shsl,0 AS wxx,COUNT(a.ybid) rl
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK) JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV')
-                AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164'
-                ,'3Z0191','3Z0103','3Z0236','3Z0239' ) AND a.childtubecount =0 
-	            GROUP BY LEFT(a.ybid,6)
-                UNION ALL
-	            --刷入系统数 混检
-                SELECT DISTINCT '混检' lx,LEFT(a.ybid,6) AS dh,
-                COUNT(*)AS srsl,0 AS shsl,0 AS wxx,SUM(a.childtubecount) rl
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK) JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV')
-                AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  ) AND a.childtubecount <>0 
-	            GROUP BY LEFT(a.ybid,6)
+            string sqlxg = this.sqlitehelper.Query(@"select query from SqlQuery where fname='机场每日统计'").Rows[0][0].ToString();
+            //string sqlxg = @"
+            //SELECT  t.lx,t.dh,SUM(t.srsl) srsl,SUM(t.shsl) shsl,SUM(t.wxx) wxx,SUM(t.rl) rl FROM  (
+	           // --刷入系统数 单检
+            //    SELECT DISTINCT  '单检' lx,LEFT(a.ybid,6) AS dh,
+            //    COUNT(*)AS srsl,0 AS shsl,0 AS wxx,COUNT(a.ybid) rl
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK) JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV')
+            //    AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164'
+            //    ,'3Z0191','3Z0103','3Z0236','3Z0239' ) AND a.childtubecount =0 
+	           // GROUP BY LEFT(a.ybid,6)
+            //    UNION ALL
+	           // --刷入系统数 混检
+            //    SELECT DISTINCT '混检' lx,LEFT(a.ybid,6) AS dh,
+            //    COUNT(*)AS srsl,0 AS shsl,0 AS wxx,SUM(a.childtubecount) rl
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK) JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV')
+            //    AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  ) AND a.childtubecount <>0 
+	           // GROUP BY LEFT(a.ybid,6)
 
-                UNION ALL
-	            --已经刷入并审核数 单检
-                SELECT DISTINCT '单检',LEFT(a.ybid,6) AS dh,
-                0 AS srsl,COUNT(*) AS shsl,0 AS wxx ,''
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND ybzt IN ('p','s')
-                AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  ) AND a.childtubecount =0  
-	            GROUP BY LEFT(a.ybid,6)
-	            UNION ALL
-	            --已经刷入并审核数 混检
-                SELECT DISTINCT '混检',LEFT(a.ybid,6) AS dh,
-                0 AS srsl,COUNT(*) AS shsl,0 AS wxx ,''
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND ybzt IN ('p','s')
-                AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  ) AND a.childtubecount <>0  
-	            GROUP BY LEFT(a.ybid,6)
+            //    UNION ALL
+	           // --已经刷入并审核数 单检
+            //    SELECT DISTINCT '单检',LEFT(a.ybid,6) AS dh,
+            //    0 AS srsl,COUNT(*) AS shsl,0 AS wxx ,''
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND ybzt IN ('p','s')
+            //    AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  ) AND a.childtubecount =0  
+	           // GROUP BY LEFT(a.ybid,6)
+	           // UNION ALL
+	           // --已经刷入并审核数 混检
+            //    SELECT DISTINCT '混检',LEFT(a.ybid,6) AS dh,
+            //    0 AS srsl,COUNT(*) AS shsl,0 AS wxx ,''
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND ybzt IN ('p','s')
+            //    AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  ) AND a.childtubecount <>0  
+	           // GROUP BY LEFT(a.ybid,6)
 
-	            UNION ALL
-	            --有标本无信息数
-                SELECT DISTINCT '',LEFT(a.ybid,6) AS dh,
-                0 AS srsl,0 AS shsl,COUNT(*) AS wxx,''
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND LEN(a.brxm) < 1
-                AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )   
-	            GROUP BY LEFT(a.ybid,6)	
-            ) t
-            GROUP BY t.lx,t.dh 
-            ";
+	           // UNION ALL
+	           // --有标本无信息数
+            //    SELECT DISTINCT '',LEFT(a.ybid,6) AS dh,
+            //    0 AS srsl,0 AS shsl,COUNT(*) AS wxx,''
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND LEN(a.brxm) < 1
+            //    AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) IN ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0075','3Z0095','3Z0103','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )   
+	           // GROUP BY LEFT(a.ybid,6)	
+            //) t
+            //GROUP BY t.lx,t.dh 
+            //";
 
             List<SqlParameter> xglist = new List<SqlParameter>();
             xglist.Add(new SqlParameter("@starttime", starttime));  //decimal.Negate(a)  区负数   DateTime.Now.AddHours(-5).ToString()
@@ -1564,19 +1578,20 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
             }
             else
             {
-                sql_yxxwbb = @"
-                SELECT Barcode,PatientName,CreateDate,HospitalSpecial FROM LisSampleDB.dbo.SampleInfo
-                WHERE LEFT(Barcode,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
-                --AND DATEDIFF(HOUR,CreateDate,GETDATE()) >= @fw
-                AND DATEDIFF(HOUR,CreateDate,GETDATE()) >= 8 AND  DATEDIFF(HOUR,CreateDate,GETDATE()) < 12
-                AND CreateDate >= GETDATE() - 1
-                AND NOT EXISTS (
-	                SELECT ybid FROM lisdb.dbo.lis_ybxx WHERE yqdh = 'pcr' AND cyrq >= GETDATE() - 1
-	                AND LEFT(ybid,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
-	                AND Barcode = ybid
-                )
-                ORDER BY CreateDate
-                ";
+                sql_yxxwbb = this.sqlitehelper.Query(@"select query from SqlQuery where fname='新冠有信息无标本-机场'").Rows[0][0].ToString();
+                //sql_yxxwbb = @"
+                //SELECT Barcode,PatientName,CreateDate,HospitalSpecial FROM LisSampleDB.dbo.SampleInfo
+                //WHERE LEFT(Barcode,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
+                //--AND DATEDIFF(HOUR,CreateDate,GETDATE()) >= @fw
+                //AND DATEDIFF(HOUR,CreateDate,GETDATE()) >= 8 AND  DATEDIFF(HOUR,CreateDate,GETDATE()) < 12
+                //AND CreateDate >= GETDATE() - 1
+                //AND NOT EXISTS (
+	               // SELECT ybid FROM lisdb.dbo.lis_ybxx WHERE yqdh = 'pcr' AND cyrq >= GETDATE() - 1
+	               // AND LEFT(ybid,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
+	               // AND Barcode = ybid
+                //)
+                //ORDER BY CreateDate
+                //";
             }
 
             List<SqlParameter> yxxwbblist = new List<SqlParameter>();
@@ -1648,7 +1663,7 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
             starttime = DateTime.Now.AddHours(-2).ToString();
             endtime = DateTime.Now.AddHours(-1).ToString();
             GetXinGuang_ybbwxx(starttime, endtime, null);
-            GetXinGuang_ybbwxx(starttime, endtime, "400");           
+            //GetXinGuang_ybbwxx(starttime, endtime, "400");           
         }
 
         /// <summary>
@@ -1661,65 +1676,55 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
         {
             string sql_ybbwxx;
             Log.LogMeg("---新冠有标本无信息---time", starttime + " | " + endtime, ".\\log\\");
-            if (khdh == "400")  //省平台数据
+            //if (khdh == "400")  //省平台数据
+            //{
+            //    sql_ybbwxx = @"
+            //    SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,d.username,f.beizhu AS linkmosiphone
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy=d.logid   
+            //    LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh=d.logid   
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(a.brxm) < 1  or a.brxm like '%交接%')
+            //    AND a.cyrq>=@starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')  
+            //    AND NOT EXISTS (
+	           //     SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE()-1  AND ybid = Barcode
+            //    )  AND a.yytm  LIKE '400%'
+            //    ORDER BY a.ybid,c.mc   
+            //    ";
+            //}
+            //else 
+            if (khdh == "机场")  //机场数据
             {
-                sql_ybbwxx = @"
-                SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,d.username,f.beizhu AS linkmosiphone
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy=d.logid   
-                LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh=d.logid   
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(a.brxm) < 1  or a.brxm like '%交接%')
-                AND a.cyrq>=@starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')  
-                AND NOT EXISTS (
-	                SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE()-1  AND ybid = Barcode
-                )  AND a.yytm  LIKE '400%'
-                ORDER BY a.ybid,c.mc   
-                ";
-            }
-            else if (khdh == "机场")  //机场数据
-            {
-                sql_ybbwxx = @"
-                SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,d.username,f.beizhu AS linkmosiphone
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh = b.yqdh AND a.ybbh = b.ybbh AND a.cdrq = b.cdrq
-                LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON SUBSTRING(a.ybid,1,6) = c.dh
-                LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy = d.logid
-                LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh = d.logid
-                WHERE a.yqdh = 'PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(isnull(a.brxm,'')) < 1  or a.brxm like '%交接%')
-                AND a.cyrq >= @starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
-                AND NOT EXISTS(
-                    SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE() - 1  AND ybid = Barcode
-                    and SUBSTRING(barcode,1,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
-                )
-                ORDER BY a.ybid,c.mc
-                ";
+                sql_ybbwxx = this.sqlitehelper.Query(@"select query from SqlQuery where fname='新冠有标本无信息-机场'").Rows[0][0].ToString();
+                //sql_ybbwxx = @"
+                //SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,d.username,f.beizhu AS linkmosiphone
+                //FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh = b.yqdh AND a.ybbh = b.ybbh AND a.cdrq = b.cdrq
+                //LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON SUBSTRING(a.ybid,1,6) = c.dh
+                //LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy = d.logid
+                //LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh = d.logid
+                //WHERE a.yqdh = 'PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(isnull(a.brxm,'')) < 1  or a.brxm like '%交接%')
+                //AND a.cyrq >= @starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
+                //AND NOT EXISTS(
+                //    SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE() - 1  AND ybid = Barcode
+                //    and SUBSTRING(barcode,1,6) in ('3Z0009','3Z0016','3Z0015','3Z0055','3Z0057','3Z0081','3Z0082','3Z0083','3Z0075','3Z0078','3Z0059','3Z0164','3Z0191','3Z0103','3Z0236','3Z0239'  )
+                //)
+                //ORDER BY a.ybid,c.mc
+                //";
             }
             else
             {
-                sql_ybbwxx = @"
-                SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,f.mc as username,f.beizhu AS linkmosiphone,a.ybbh
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                --LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy=d.logid   
-                LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh=c.ywy  
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(isnull(a.brxm,'')) < 1 or a.brxm like '%交接%')
-                AND a.cyrq >= @starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')  
-                AND NOT EXISTS (
-                    SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE()-1  AND ybid = Barcode
-                )  AND a.yytm NOT LIKE '400%'
-                ORDER BY a.ybid,c.mc   
-                ";
+                sql_ybbwxx = this.sqlitehelper.Query(@"select query from SqlQuery where fname='新冠有标本无信息'").Rows[0][0].ToString();
                 //sql_ybbwxx = @"
-                //SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,d.username,f.beizhu AS linkmosiphone
+                //SELECT a.cdrq,a.cyrq,a.ybid,A.yytm,c.mc,f.mc as username,f.beizhu AS linkmosiphone,a.ybbh
                 //FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
                 //LEFT JOIN lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                //LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy=d.logid   
-                //LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh=d.logid   
-                //WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(a.brxm) < 1  or a.brxm like '%交接%')
-                //AND a.cyrq>=@starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')  
+                //--LEFT JOIN lisdb.dbo.xt_user d WITH(NOLOCK) on c.ywy=d.logid   
+                //LEFT JOIN lisdb.dbo.xt_brlb f WITH(NOLOCK)  ON f.dh=c.ywy  
+                //WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(isnull(a.brxm,'')) < 1 or a.brxm like '%交接%')
+                //AND a.cyrq >= @starttime  AND a.cyrq < @endtime  AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')  
                 //AND NOT EXISTS (
-                // SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE()-1  AND ybid = Barcode
-                //)  AND a.yytm NOT LIKE '400%'
+                //    SELECT Barcode FROM lis.dbo.FileRecieveInfo WHERE CreateDate >= GETDATE()-1  AND ybid = Barcode
+                //)  
                 //ORDER BY a.ybid,c.mc   
                 //";
             }
@@ -1784,12 +1789,13 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
                             sbBarCode.Append("代表：" + ywy1);
                         }
 
-                        if (khdh == "400") //东软有信息无标本异常提醒到  邮件解析异常群提醒
-                        {
-                            Dingtalk.SendDingtalk(sbBarCode.ToString(), hjtx, "0", WEB_HOOK, secret);
-                            //Dingtalk.SendDingtalk(sendmsg, hjtx, atALL, WEB_HOOK, secret);
-                        }
-                        else if (khdh == "机场")
+                        //if (khdh == "400") //东软有信息无标本异常提醒到  邮件解析异常群提醒
+                        //{
+                        //    Dingtalk.SendDingtalk(sbBarCode.ToString(), hjtx, "0", WEB_HOOK, secret);
+                        //    //Dingtalk.SendDingtalk(sendmsg, hjtx, atALL, WEB_HOOK, secret);
+                        //}
+                        //else 
+                        if (khdh == "机场")
                         {
                             Dingtalk.SendDingtalk(sbBarCode.ToString(), ywyphone1, "0", WEB_HOOK_jc, secret_jc);
                         }
@@ -1855,31 +1861,32 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
         #region 新冠每日统计
         private void btn_xg_Click(object sender, EventArgs e)
         {
-            starttime = DateTime.Now.AddHours(-24).ToString();            
-            string sqlxg = @"
-            SELECT  SUM(a.srsl) 刷入LIS数量,SUM(a.shsl) 已审核数量,SUM(a.wxx) 有标本无信息 FROM  (
-                SELECT    
-                COUNT(DISTINCT ybid)AS srsl,0 AS shsl,0 AS wxx
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK) JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV')
-                AND a.cyrq>=@starttime  and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')    
-                UNION ALL
-                SELECT 
-                0 AS srsl,COUNT(DISTINCT ybid) AS shsl,0 AS wxx 
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND ybzt IN ('p','s')
-                AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')    
-	            UNION ALL
-                SELECT  
-                0 AS srsl,0 AS shsl,COUNT(DISTINCT ybid) AS wxx
-                FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
-                LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
-                WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(a.brxm) < 1  or a.brxm like '%交接%')
-                AND a.cyrq>=@starttime  and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')    
-            ) a
-            ";
+            starttime = DateTime.Now.AddHours(-24).ToString();
+            string sqlxg = this.sqlitehelper.Query(@"select query from SqlQuery where fname='新冠每日统计'").Rows[0][0].ToString();
+            //string sqlxg = @"
+            //SELECT  SUM(a.srsl) 刷入LIS数量,SUM(a.shsl) 已审核数量,SUM(a.wxx) 有标本无信息 FROM  (
+            //    SELECT    
+            //    COUNT(DISTINCT ybid)AS srsl,0 AS shsl,0 AS wxx
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK) JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV')
+            //    AND a.cyrq>=@starttime  and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')    
+            //    UNION ALL
+            //    SELECT 
+            //    0 AS srsl,COUNT(DISTINCT ybid) AS shsl,0 AS wxx 
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND ybzt IN ('p','s')
+            //    AND a.cyrq>=@starttime and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')    
+	           // UNION ALL
+            //    SELECT  
+            //    0 AS srsl,0 AS shsl,COUNT(DISTINCT ybid) AS wxx
+            //    FROM lisdb.dbo.lis_ybxx a WITH(NOLOCK)  JOIN lisdb.dbo.lis_xmcdz b WITH(NOLOCK)  ON a.yqdh=b.yqdh AND a.ybbh=b.ybbh AND a.cdrq=b.cdrq 
+            //    LEFT JOIN  lisdb.dbo.xt_yymc_print c WITH(NOLOCK) ON  SUBSTRING(a.ybid,1,6) =c.dh
+            //    WHERE  a.yqdh='PCR' AND b.xmdh in   ('XG-RNA','2019-NCOV','XG-ORF1AB','XG-N','NCOV') AND (LEN(a.brxm) < 1  or a.brxm like '%交接%')
+            //    AND a.cyrq>=@starttime  and a.cyrq<=getdate() AND SUBSTRING(ybid,1,6) NOT IN ('999999','999998')    
+            //) a
+            //";
 
             List<SqlParameter> xglist = new List<SqlParameter>();
             xglist.Add(new SqlParameter("@starttime", starttime));  //decimal.Negate(a)  区负数   DateTime.Now.AddHours(-5).ToString()
@@ -2013,7 +2020,7 @@ FROM lis.dbo.ImportFileEmailInfo with(nolock) WHERE CreateTime > DATEADD(MINUTE,
 
             timer4.Start();
 
-            dateTimePicker2.Value = Convert.ToDateTime(this.sqlcehelper.Query("select pvalue from t_sys_parm where pcode='Timedpush'").Rows[0][0].ToString()); //获取配置时间
+            dateTimePicker2.Value = Convert.ToDateTime(this.sqlitehelper.Query("select pvalue from t_sys_parm where pcode='Timedpush'").Rows[0][0].ToString()); //获取配置时间
 
 
         }

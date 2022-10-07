@@ -30,8 +30,8 @@ namespace 监控数据
                 //如果没有其它例程，就新建一个窗体
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                //Application.Run(new FormMain());
                 Application.Run(new FormMain());
+                //Application.Run(new FormSet());
             }
             else
             {

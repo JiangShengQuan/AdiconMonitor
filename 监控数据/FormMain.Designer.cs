@@ -70,6 +70,7 @@
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
             this.btn_hpvtct = new System.Windows.Forms.Button();
             this.btn_err = new System.Windows.Forms.Button();
+            this.sQL语句配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -232,44 +233,45 @@
             this.显示ToolStripMenuItem,
             this.隐藏ToolStripMenuItem,
             this.设置ToolStripMenuItem,
+            this.sQL语句配置ToolStripMenuItem,
             this.关于ToolStripMenuItem,
             this.退出ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(107, 124);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 158);
             this.contextMenuStrip1.Text = "退出";
             // 
             // 显示ToolStripMenuItem
             // 
             this.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem";
-            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.显示ToolStripMenuItem.Text = "显示";
             this.显示ToolStripMenuItem.Click += new System.EventHandler(this.显示ToolStripMenuItem_Click);
             // 
             // 隐藏ToolStripMenuItem
             // 
             this.隐藏ToolStripMenuItem.Name = "隐藏ToolStripMenuItem";
-            this.隐藏ToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.隐藏ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.隐藏ToolStripMenuItem.Text = "隐藏";
             this.隐藏ToolStripMenuItem.Click += new System.EventHandler(this.隐藏ToolStripMenuItem_Click);
             // 
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
-            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.设置ToolStripMenuItem.Text = "设置";
             this.设置ToolStripMenuItem.Click += new System.EventHandler(this.设置ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
-            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.关于ToolStripMenuItem.Text = "关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
@@ -431,6 +433,13 @@
             this.btn_err.UseVisualStyleBackColor = true;
             this.btn_err.Click += new System.EventHandler(this.btn_err_Click);
             // 
+            // sQL语句配置ToolStripMenuItem
+            // 
+            this.sQL语句配置ToolStripMenuItem.Name = "sQL语句配置ToolStripMenuItem";
+            this.sQL语句配置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sQL语句配置ToolStripMenuItem.Text = "SQL语句配置";
+            this.sQL语句配置ToolStripMenuItem.Click += new System.EventHandler(this.sQL语句配置ToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -522,6 +531,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker3;
         private System.Windows.Forms.Button btn_hpvtct;
         private System.Windows.Forms.Button btn_err;
+        private System.Windows.Forms.ToolStripMenuItem sQL语句配置ToolStripMenuItem;
     }
 }
 

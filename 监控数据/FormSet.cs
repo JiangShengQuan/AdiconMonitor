@@ -272,12 +272,5 @@ namespace 监控数据
             }
             dataGridView1.DataSource = this.sqlcehelper.Query("SELECT mail,phone FROM mailtophone");
         }
-
-        public string str_sql;
-        private void button6_Click(object sender, EventArgs e)
-        {
-            FormSQL form_sql = new FormSQL("测试");
-            form_sql.ShowDialog();
-        }
     }
 }
