@@ -86,8 +86,6 @@
             this.textBox20 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -101,36 +99,6 @@
             this.textBox24 = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.textBox29 = new System.Windows.Forms.TextBox();
-            this.textBox30 = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.groupBox14 = new System.Windows.Forms.GroupBox();
-            this.textBox27 = new System.Windows.Forms.TextBox();
-            this.textBox28 = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.textBox_airportkey = new System.Windows.Forms.TextBox();
-            this.textBox_airportwebhook = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.textBox26 = new System.Windows.Forms.TextBox();
-            this.textBox25 = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.groupBox16 = new System.Windows.Forms.GroupBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.tbx_hpvtct_key = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.tbx_hpvtct_webhook = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -147,13 +115,6 @@
             this.groupBox11.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.groupBox15.SuspendLayout();
-            this.groupBox14.SuspendLayout();
-            this.groupBox13.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabPage5.SuspendLayout();
-            this.groupBox16.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -746,19 +707,14 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(-1, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(803, 562);
             this.tabControl1.TabIndex = 31;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
+  
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.checkBox5);
-            this.tabPage1.Controls.Add(this.checkBox4);
             this.tabPage1.Controls.Add(this.checkBox2);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox8);
@@ -769,26 +725,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "监控基础设置";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(16, 325);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(150, 16);
-            this.checkBox5.TabIndex = 31;
-            this.checkBox5.Text = "是否监控repno生成异常";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(15, 279);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(174, 16);
-            this.checkBox4.TabIndex = 30;
-            this.checkBox4.Text = "是否监控PDF报告单生成异常";
-            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -928,9 +864,6 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.groupBox15);
-            this.tabPage3.Controls.Add(this.groupBox14);
-            this.tabPage3.Controls.Add(this.groupBox13);
             this.tabPage3.Controls.Add(this.groupBox9);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -938,279 +871,6 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "新冠数据提醒设置";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // groupBox15
-            // 
-            this.groupBox15.Controls.Add(this.textBox29);
-            this.groupBox15.Controls.Add(this.textBox30);
-            this.groupBox15.Controls.Add(this.label31);
-            this.groupBox15.Controls.Add(this.label32);
-            this.groupBox15.Location = new System.Drawing.Point(9, 337);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(771, 101);
-            this.groupBox15.TabIndex = 25;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "【大筛审核情况】";
-            // 
-            // textBox29
-            // 
-            this.textBox29.Location = new System.Drawing.Point(69, 64);
-            this.textBox29.Name = "textBox29";
-            this.textBox29.Size = new System.Drawing.Size(696, 21);
-            this.textBox29.TabIndex = 7;
-            // 
-            // textBox30
-            // 
-            this.textBox30.Location = new System.Drawing.Point(69, 32);
-            this.textBox30.Name = "textBox30";
-            this.textBox30.Size = new System.Drawing.Size(696, 21);
-            this.textBox30.TabIndex = 6;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 68);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(65, 12);
-            this.label31.TabIndex = 5;
-            this.label31.Text = "加签密钥：";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(6, 35);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(59, 12);
-            this.label32.TabIndex = 0;
-            this.label32.Text = "Webhook：";
-            // 
-            // groupBox14
-            // 
-            this.groupBox14.Controls.Add(this.textBox27);
-            this.groupBox14.Controls.Add(this.textBox28);
-            this.groupBox14.Controls.Add(this.label29);
-            this.groupBox14.Controls.Add(this.label30);
-            this.groupBox14.Location = new System.Drawing.Point(9, 230);
-            this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(771, 101);
-            this.groupBox14.TabIndex = 24;
-            this.groupBox14.TabStop = false;
-            this.groupBox14.Text = "【新冠审核情况】";
-            // 
-            // textBox27
-            // 
-            this.textBox27.Location = new System.Drawing.Point(69, 64);
-            this.textBox27.Name = "textBox27";
-            this.textBox27.Size = new System.Drawing.Size(696, 21);
-            this.textBox27.TabIndex = 7;
-            // 
-            // textBox28
-            // 
-            this.textBox28.Location = new System.Drawing.Point(69, 32);
-            this.textBox28.Name = "textBox28";
-            this.textBox28.Size = new System.Drawing.Size(696, 21);
-            this.textBox28.TabIndex = 6;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(3, 68);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(65, 12);
-            this.label29.TabIndex = 5;
-            this.label29.Text = "加签密钥：";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(6, 35);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(59, 12);
-            this.label30.TabIndex = 0;
-            this.label30.Text = "Webhook：";
-            // 
-            // groupBox13
-            // 
-            this.groupBox13.Controls.Add(this.textBox_airportkey);
-            this.groupBox13.Controls.Add(this.textBox_airportwebhook);
-            this.groupBox13.Controls.Add(this.label26);
-            this.groupBox13.Controls.Add(this.label25);
-            this.groupBox13.Location = new System.Drawing.Point(9, 123);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(771, 101);
-            this.groupBox13.TabIndex = 23;
-            this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "【机场新冠】";
-            // 
-            // textBox_airportkey
-            // 
-            this.textBox_airportkey.Location = new System.Drawing.Point(69, 64);
-            this.textBox_airportkey.Name = "textBox_airportkey";
-            this.textBox_airportkey.Size = new System.Drawing.Size(696, 21);
-            this.textBox_airportkey.TabIndex = 7;
-            // 
-            // textBox_airportwebhook
-            // 
-            this.textBox_airportwebhook.Location = new System.Drawing.Point(69, 32);
-            this.textBox_airportwebhook.Name = "textBox_airportwebhook";
-            this.textBox_airportwebhook.Size = new System.Drawing.Size(696, 21);
-            this.textBox_airportwebhook.TabIndex = 6;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(3, 68);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(65, 12);
-            this.label26.TabIndex = 5;
-            this.label26.Text = "加签密钥：";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 35);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(59, 12);
-            this.label25.TabIndex = 0;
-            this.label25.Text = "Webhook：";
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.textBox26);
-            this.tabPage4.Controls.Add(this.textBox25);
-            this.tabPage4.Controls.Add(this.label28);
-            this.tabPage4.Controls.Add(this.label27);
-            this.tabPage4.Controls.Add(this.button5);
-            this.tabPage4.Controls.Add(this.dataGridView1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(795, 536);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "邮件@设置";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // textBox26
-            // 
-            this.textBox26.Location = new System.Drawing.Point(514, 70);
-            this.textBox26.Name = "textBox26";
-            this.textBox26.Size = new System.Drawing.Size(186, 21);
-            this.textBox26.TabIndex = 5;
-            // 
-            // textBox25
-            // 
-            this.textBox25.Location = new System.Drawing.Point(514, 25);
-            this.textBox25.Name = "textBox25";
-            this.textBox25.Size = new System.Drawing.Size(186, 21);
-            this.textBox25.TabIndex = 4;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(445, 73);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(53, 12);
-            this.label28.TabIndex = 3;
-            this.label28.Text = "手机号：";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(445, 28);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(41, 12);
-            this.label27.TabIndex = 2;
-            this.label27.Text = "邮箱：";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(461, 132);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(66, 23);
-            this.button5.TabIndex = 1;
-            this.button5.Text = "新增";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2});
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(405, 456);
-            this.dataGridView1.TabIndex = 0;
-            // 
-            // Column1
-            // 
-            this.Column1.DataPropertyName = "mail";
-            this.Column1.HeaderText = "邮箱";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 200;
-            // 
-            // Column2
-            // 
-            this.Column2.DataPropertyName = "phone";
-            this.Column2.HeaderText = "手机号";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 150;
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.groupBox16);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(795, 536);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "其他提醒";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // groupBox16
-            // 
-            this.groupBox16.Controls.Add(this.label34);
-            this.groupBox16.Controls.Add(this.tbx_hpvtct_key);
-            this.groupBox16.Controls.Add(this.label33);
-            this.groupBox16.Controls.Add(this.tbx_hpvtct_webhook);
-            this.groupBox16.Location = new System.Drawing.Point(9, 15);
-            this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(781, 86);
-            this.groupBox16.TabIndex = 4;
-            this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "HPV、TCT阳性结果提醒";
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(6, 52);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(65, 12);
-            this.label34.TabIndex = 1;
-            this.label34.Text = "加签密钥：";
-            // 
-            // tbx_hpvtct_key
-            // 
-            this.tbx_hpvtct_key.Location = new System.Drawing.Point(71, 49);
-            this.tbx_hpvtct_key.Name = "tbx_hpvtct_key";
-            this.tbx_hpvtct_key.Size = new System.Drawing.Size(692, 21);
-            this.tbx_hpvtct_key.TabIndex = 3;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(6, 24);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(59, 12);
-            this.label33.TabIndex = 0;
-            this.label33.Text = "Webhook：";
-            // 
-            // tbx_hpvtct_webhook
-            // 
-            this.tbx_hpvtct_webhook.Location = new System.Drawing.Point(71, 21);
-            this.tbx_hpvtct_webhook.Name = "tbx_hpvtct_webhook";
-            this.tbx_hpvtct_webhook.Size = new System.Drawing.Size(692, 21);
-            this.tbx_hpvtct_webhook.TabIndex = 2;
             // 
             // FormSet
             // 
@@ -1257,18 +917,6 @@
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.groupBox15.ResumeLayout(false);
-            this.groupBox15.PerformLayout();
-            this.groupBox14.ResumeLayout(false);
-            this.groupBox14.PerformLayout();
-            this.groupBox13.ResumeLayout(false);
-            this.groupBox13.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.tabPage5.ResumeLayout(false);
-            this.groupBox16.ResumeLayout(false);
-            this.groupBox16.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1345,37 +993,5 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox textBox24;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.GroupBox groupBox13;
-        private System.Windows.Forms.TextBox textBox_airportkey;
-        private System.Windows.Forms.TextBox textBox_airportwebhook;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.TextBox textBox26;
-        private System.Windows.Forms.TextBox textBox25;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.GroupBox groupBox14;
-        private System.Windows.Forms.TextBox textBox27;
-        private System.Windows.Forms.TextBox textBox28;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.GroupBox groupBox15;
-        private System.Windows.Forms.TextBox textBox29;
-        private System.Windows.Forms.TextBox textBox30;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.GroupBox groupBox16;
-        private System.Windows.Forms.TextBox tbx_hpvtct_key;
-        private System.Windows.Forms.TextBox tbx_hpvtct_webhook;
-        private System.Windows.Forms.CheckBox checkBox5;
     }
 }

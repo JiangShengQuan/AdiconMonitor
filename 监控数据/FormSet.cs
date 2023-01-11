@@ -29,33 +29,21 @@ namespace 监控数据
             GetSetINI.SetiniProfile("系统设置", "钉钉机器人Webhook", textBox1.Text.Trim(), ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "钉钉机器人加签密钥", textBox18.Text.Trim(), ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "新冠钉钉机器人Webhook", textBox20.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "新冠钉钉机器人加签密钥", textBox19.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "airportwebhook", textBox_airportwebhook.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "airportkey", textBox_airportkey.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "新冠审核情况Webhook", textBox28.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "新冠审核情况加签密钥", textBox27.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "大筛审核情况Webhook", textBox30.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "大筛审核情况加签密钥", textBox29.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "HPVTCTWebhook", tbx_hpvtct_webhook.Text.Trim(), ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "HPVTCT加签密钥", tbx_hpvtct_key.Text.Trim(), ".\\set.ini");
+            GetSetINI.SetiniProfile("系统设置", "新冠钉钉机器人加签密钥", textBox19.Text.Trim(), ".\\set.ini"); 
 
             GetSetINI.SetiniProfile("系统设置", "获取多少分钟内的数据", textBox2.Text.Trim(), ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "不提醒的发件人", textBox7.Text.Trim(), ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "混检表异常提醒人号码", textBox8.Text.Trim(), ".\\set.ini");
 
-            string all,autostart,btx,jkpdf,jkrepno;
+            string all,autostart,btx;
             if(checkBox1.Checked) { all = "1"; } else { all = "0"; }
             if (checkBox2.Checked) { autostart = "1"; } else { autostart = "0"; }
             if (checkBox3.Checked) { btx = "1"; } else { btx = "0"; }
-            if (checkBox4.Checked) { jkpdf = "1"; } else { jkpdf = "0"; }
-            if (checkBox5.Checked) { jkrepno = "1"; } else { jkrepno = "0"; }
 
             GetSetINI.SetiniProfile("系统设置", "atALL", all, ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "atMobiles", textBox13.Text.Trim(), ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "自动开始", autostart, ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "不提醒保存条码数据失败错误", btx, ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "是否监控PDF报告单生成异常", jkpdf, ".\\set.ini");
-            GetSetINI.SetiniProfile("系统设置", "是否监控repno生成异常", jkrepno, ".\\set.ini");
 
             GetSetINI.SetiniProfile("系统设置", "常规对接邮箱账号", textBox9.Text.Trim(), ".\\set.ini");
             GetSetINI.SetiniProfile("系统设置", "常规对接邮箱密码", CryptoDES.EncryptDES(textBox10.Text.Trim(), "fzadicon"), ".\\set.ini");
@@ -89,15 +77,6 @@ namespace 监控数据
             textBox18.Text = GetSetINI.GetiniProfile("系统设置", "钉钉机器人加签密钥", "", 128, ".\\set.ini");
             textBox20.Text = GetSetINI.GetiniProfile("系统设置", "新冠钉钉机器人Webhook", "", 128, ".\\set.ini");
             textBox19.Text = GetSetINI.GetiniProfile("系统设置", "新冠钉钉机器人加签密钥", "", 128, ".\\set.ini");
-            textBox_airportwebhook.Text = GetSetINI.GetiniProfile("系统设置", "airportwebhook", "", 128, ".\\set.ini");
-            textBox_airportkey.Text = GetSetINI.GetiniProfile("系统设置", "airportkey", "", 128, ".\\set.ini");
-            textBox28.Text = GetSetINI.GetiniProfile("系统设置", "新冠审核情况Webhook", "", 128, ".\\set.ini");
-            textBox27.Text = GetSetINI.GetiniProfile("系统设置", "新冠审核情况加签密钥", "", 128, ".\\set.ini");
-            textBox30.Text = GetSetINI.GetiniProfile("系统设置", "大筛审核情况Webhook", "", 128, ".\\set.ini");
-            textBox29.Text = GetSetINI.GetiniProfile("系统设置", "大筛审核情况加签密钥", "", 128, ".\\set.ini");
-
-            tbx_hpvtct_webhook.Text = GetSetINI.GetiniProfile("系统设置", "HPVTCTWebhook", "", 128, ".\\set.ini");
-            tbx_hpvtct_key.Text = GetSetINI.GetiniProfile("系统设置", "HPVTCT加签密钥", "", 128, ".\\set.ini");
 
             textBox2.Text = GetSetINI.GetiniProfile("系统设置", "获取多少分钟内的数据", "10", 128, ".\\set.ini");
             textBox7.Text = GetSetINI.GetiniProfile("系统设置", "不提醒的发件人", "", 1024, ".\\set.ini");
@@ -151,23 +130,6 @@ namespace 监控数据
             else
             {
                 checkBox3.Checked = false;
-            }
-
-            if (GetSetINI.GetiniProfile("系统设置", "是否监控PDF报告单生成异常", "", 128, ".\\set.ini") == "1")
-            {
-                checkBox4.Checked = true;
-            }
-            else
-            {
-                checkBox4.Checked = false;
-            }
-            if (GetSetINI.GetiniProfile("系统设置", "是否监控repno生成异常", "", 128, ".\\set.ini") == "1")
-            {
-                checkBox5.Checked = true;
-            }
-            else
-            {
-                checkBox5.Checked = false;
             }
 
         }
@@ -238,39 +200,5 @@ namespace 监控数据
             }
         }               
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControl1.SelectedTab.Name == "tabPage4")
-            {
-                dataGridView1.DataSource = this.sqlcehelper.Query("SELECT mail,phone FROM mailtophone");
-            }
-        }
-
-        //新增 邮件-手机号
-        private void button5_Click(object sender, EventArgs e)
-        {
-            if (Regex.Match(textBox25.Text.Trim(), @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$").Success && Regex.Match(textBox26.Text.Trim(), @"^1[0-9]{10}$").Success)
-            {           
-                Dictionary<string, object> dic = new Dictionary<string, object>();
-                dic.Add("mail", textBox25.Text.Trim());
-                dic.Add("phone", textBox26.Text.Trim());
-                StringBuilder sb = new StringBuilder();
-                StringBuilder sb2 = new StringBuilder();
-                sb.Append("insert into mailtophone (");
-                sb2.Append("values (");
-                foreach (KeyValuePair<string, object> item in dic)
-                {
-                    sb.Append(item.Key + ",");
-                    sb2.Append("'" + item.Value.ToString().Replace("'", "") + "',");
-                }
-                string strSql = (sb.ToString() + ")").Replace(",)", ")") + (sb2.ToString() + ")").Replace(",)", ")");
-                this.sqlcehelper.ExecNonQuery(strSql);
-            }
-            else
-            {
-                MessageBox.Show("请输入正确的邮箱地址及手机号","提示");
-            }
-            dataGridView1.DataSource = this.sqlcehelper.Query("SELECT mail,phone FROM mailtophone");
-        }
     }
 }

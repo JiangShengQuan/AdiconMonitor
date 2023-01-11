@@ -135,7 +135,7 @@ namespace 监控数据.Tools
                 }
                 return HttpListenerPostValueList;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
